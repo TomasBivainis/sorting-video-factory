@@ -124,11 +124,11 @@ def get_ffmpeg_path():
       project_directory += '/' + directories[i]
     
     if system == "linux" or system == "linux2":
-        return os.path.join(os.path.dirname(project_directory), "ffmpeg", "linux", "ffmpeg")
+        return os.path.join(os.path.dirname(project_directory), "ffmpeg", "linux", "bin", "ffmpeg")
     elif system == "darwin":
         return os.path.join(os.path.dirname(project_directory), "ffmpeg", "macos", "ffmpeg")
     elif system == "win32":
-        return os.path.join(os.path.dirname(project_directory), "ffmpeg", "windows", "ffmpeg.exe")
+        return os.path.join(os.path.dirname(project_directory), "ffmpeg", "windows", "bin", "ffmpeg.exe")
     else:
         raise EnvironmentError("Unsupported platform!")
       
