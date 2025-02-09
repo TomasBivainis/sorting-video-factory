@@ -2,8 +2,9 @@ from PIL import Image, ImageDraw
 import random
 import os
 from numpy import asarray
-os.environ["IMAGEIO_FFMPEG_EXE"] = "./ffmpeg"
 from moviepy.editor import *
+import sys
+import subprocess
 
 video_width = 1280
 video_height = 720
@@ -110,3 +111,36 @@ def render(algorithm):
   final_clip = ImageSequenceClip(clips, fps=fps)
 
   final_clip.write_videofile(video_dir + 'movie.mp4', fps=fps)
+  
+
+def get_ffmpeg_path():
+    system = sys.platform
+    
+    directories = __file__.split('/')
+    
+    project_directory = ''
+    
+    for i in range(1, len(directories) - 1):
+      project_directory += '/' + directories[i]
+    
+    if system == "linux" or system == "linux2":
+        return os.path.join(os.path.dirname(project_directory), "ffmpeg", "linux", "ffmpeg")
+    elif system == "darwin":
+        return os.path.join(os.path.dirname(project_directory), "ffmpeg", "macos", "ffmpeg")
+    elif system == "win32":
+        return os.path.join(os.path.dirname(project_directory), "ffmpeg", "windows", "ffmpeg.exe")
+    else:
+        raise EnvironmentError("Unsupported platform!")
+      
+def run_ffmpeg():
+    ffmpeg_path = get_ffmpeg_path()
+    print(ffmpeg_path)
+    try:
+        subprocess.run([ffmpeg_path, '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # print("FFmpeg is ready to use!")
+    except FileNotFoundError:
+        print(f"Could not find FFmpeg at {ffmpeg_path}")
+        raise FileNotFoundError("Could not find FFmpeg")
+
+run_ffmpeg()
+      
